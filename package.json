@@ -1,0 +1,30 @@
+{
+  "name": "greenhive-api",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "dev": "ts-node-dev --respawn --transpile-only --ignore-watch node_modules src/server.ts",
+    "build": "tsup src",
+    "start": "node dist/server.js"
+  },
+  "devDependencies": {
+    "@rocketseat/eslint-config": "^2.1.0",
+    "@types/node": "^20.4.6",
+    "eslint": "^8.46.0",
+    "prisma": "^5.1.0",
+    "tsup": "^7.2.0",
+    "typescript": "^5.1.6",
+    "vitest": "^0.34.1"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.1.0",
+    "bcrypt": "^5.1.0",
+    "fastify": "^4.21.0",
+    "jsonwebtoken": "^9.0.1",
+    "lodash": "^4.17.21",
+    "ts-node-dev": "^2.0.0",
+    "yarn": "^1.22.19",
+    "zod": "^3.21.4"
+  }
+}
