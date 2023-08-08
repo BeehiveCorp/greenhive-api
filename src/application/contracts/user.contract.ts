@@ -6,5 +6,5 @@ export interface ICreateUserUseCase {
 
 export interface UserContract {
   create(user: User): Promise<User>
-  findByEmail(email: string): Promise<User | undefined>
+  findByEmail(email: string): Promise<User | null>
 }

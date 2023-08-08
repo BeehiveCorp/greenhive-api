@@ -11,10 +11,14 @@ export class PrismaUserRepository implements UserContract {
   }
 
   async create(user: User): Promise<User> {
-    throw new Error('Method not implemented.')
+    const createdUser = await this._prisma.user.create({ data: user })
+    return createdUser
   }
 
-  findByEmail(email: string): Promise<User | undefined> {
-    throw new Error('Method not implemented.')
+  async findByEmail(email: string): Promise<User | null> {
+    const userFound: User | null = await this._prisma.user.findFirst({
+      where: { email },
+    })
+    return userFound
   }
 }

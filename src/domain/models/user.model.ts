@@ -5,13 +5,13 @@ type TUser = {
 }
 
 export class User {
-  public readonly _id: string | undefined
-  public readonly _name: string
-  public readonly _email: string
+  public readonly id: string | undefined
+  public readonly name: string
+  public readonly email: string
 
   constructor({ email, name, id }: TUser) {
-    this._id = id
-    this._name = name
-    this._email = email
+    this.id = id
+    this.name = name
+    this.email = email
   }
 }

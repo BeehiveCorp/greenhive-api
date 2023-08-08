@@ -14,7 +14,7 @@ export class UserController {
 
     const user = new User({ name, email })
 
-    const createdUser = this._createUserUseCase.execute(user)
+    const createdUser = await this._createUserUseCase.execute(user)
 
     reply.send(createdUser)
   }
