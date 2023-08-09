@@ -9,6 +9,9 @@ export class CreateUserUseCase implements ICreateUserUseCase {
   }
 
   async execute(user: User): Promise<User> {
-    return await this.userRepository.create(user)
+    console.log('EXECUTE')
+    const created = await this.userRepository.create(user)
+    console.log('WHAT WAS CREATED', created)
+    return created
   }
 }

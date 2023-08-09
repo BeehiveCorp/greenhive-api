@@ -9,10 +9,12 @@ export class UserController {
     this._createUserUseCase = createUserUseCase
   }
 
-  async createUser(req: FastifyRequest, reply: FastifyReply) {
+  createUser = async (req: FastifyRequest, reply: FastifyReply) => {
     const { name, email } = req.body as { name: string; email: string }
 
     const user = new User({ name, email })
+
+    console.log(JSON.stringify(typeof this._createUserUseCase))
 
     const createdUser = await this._createUserUseCase.execute(user)
 
