@@ -1,5 +1,7 @@
 import { FastifyReply, FastifyRequest } from 'fastify'
 import jwt from 'jsonwebtoken'
+import { ResponseHandler } from '../utils'
+import { UnauthorizedError } from '@/application/errors'
 
 export const authMiddleware = () => {
   return async (
@@ -9,7 +11,7 @@ export const authMiddleware = () => {
   ) => {
     const token = request.headers?.authorization
 
-    if (!token) return reply.status(401).send({ message: 'Token not provided' })
+    if (!token) return ResponseHandler.error(reply, new UnauthorizedError())
 
     try {
       const decoded = jwt.verify(token, String(process.env.JWT_SECRET_KEY))
@@ -19,8 +21,8 @@ export const authMiddleware = () => {
       }
 
       done()
-    } catch (err) {
-      return reply.status(401).send({ message: 'Invalid token' })
+    } catch {
+      ResponseHandler.error(reply, new UnauthorizedError())
     }
   }
 }

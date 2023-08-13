@@ -1,5 +1,7 @@
 import { FastifyRequest, FastifyReply } from 'fastify'
 import { z } from 'zod'
+import { ResponseHandler } from '../utils'
+import { InternalServerError, ValidationError } from '@/application/errors'
 
 export const validateSchemaMiddleware = (schema: z.Schema) => {
   return async (
@@ -11,10 +13,17 @@ export const validateSchemaMiddleware = (schema: z.Schema) => {
       schema.parse(request.body)
       done()
     } catch (error) {
-      if (error instanceof z.ZodError)
-        return reply.status(400).send({ errors: error.issues })
+      if (error instanceof z.ZodError) {
+        const missingFields = error.issues
+          .map((issue) => issue.path.join('.'))
+          .join(', ')
 
-      return reply.status(500).send({ message: 'Internal Server Error' })
+        const message = `O(s) campo(s) ${missingFields} está(ão) faltando na requisição.`
+
+        return ResponseHandler.error(reply, new ValidationError(message))
+      }
+
+      return ResponseHandler.error(reply, new InternalServerError())
     }
   }
 }

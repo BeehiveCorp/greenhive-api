@@ -1,4 +1,5 @@
 import { UserContract } from '@/application/contracts'
+import { NotFoundError } from '@/application/errors'
 import { User } from '@/domain/models'
 
 interface ISignInUserUseCase {
@@ -15,9 +16,10 @@ export class SignInUserUseCase implements ISignInUserUseCase {
   async execute(email: string, password: string): Promise<User | null> {
     const foundUser = await this.userRepository.findByEmail(email)
 
-    if (!foundUser) return null
+    if (!foundUser) throw new NotFoundError('Usuário não encontrado.')
 
-    if (foundUser.password !== password) return null
+    if (foundUser.password !== password)
+      throw new NotFoundError('Senha incorreta.')
 
     return foundUser
   }
