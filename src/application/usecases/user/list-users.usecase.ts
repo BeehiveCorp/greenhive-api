@@ -1,5 +1,9 @@
-import { UserContract, IListUsersUseCase } from '@/application/contracts'
+import { UserContract } from '@/application/contracts'
 import { User } from '@/domain/models'
+
+interface IListUsersUseCase {
+  execute: UserContract['findAll']
+}
 
 export class ListUsersUseCase implements IListUsersUseCase {
   private readonly userRepository: UserContract

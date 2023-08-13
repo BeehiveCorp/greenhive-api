@@ -1,5 +1,9 @@
-import { UserContract, ISignInUserUseCase } from '@/application/contracts'
+import { UserContract } from '@/application/contracts'
 import { User } from '@/domain/models'
+
+interface ISignInUserUseCase {
+  execute: (email: string, password: string) => Promise<User | null>
+}
 
 export class SignInUserUseCase implements ISignInUserUseCase {
   private readonly userRepository: UserContract
