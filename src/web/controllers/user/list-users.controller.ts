@@ -11,7 +11,7 @@ export const listUsersController = (prismaUserRepository: UserContract) => {
     try {
       const listUsersUseCase = new ListUsersUseCase(prismaUserRepository)
       const users = await listUsersUseCase.execute()
-      reply.status(200).send(users)
+      return reply.status(200).send(users)
     } catch (error) {
       ResponseHandler.error(reply, error as BaseError)
     }
