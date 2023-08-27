@@ -11,6 +11,7 @@ import {
   createUserController,
   listUsersController,
   signInUserController,
+  signInAdmUserController,
 } from '@/web/controllers/user'
 
 export const userRoutes: FastifyPluginCallback = (fastify, _, done) => {
@@ -18,7 +19,7 @@ export const userRoutes: FastifyPluginCallback = (fastify, _, done) => {
 
   fastify.post(
     '/user/create',
-    { preHandler: [validateSchemaMiddleware(UserCreateDTO), authMiddleware()] },
+    { preHandler: [validateSchemaMiddleware(UserCreateDTO)] },
     createUserController(prismaUserRepository),
   )
 
@@ -26,6 +27,12 @@ export const userRoutes: FastifyPluginCallback = (fastify, _, done) => {
     '/user/sign-in',
     { preHandler: [validateSchemaMiddleware(UserSignInDTO)] },
     signInUserController(prismaUserRepository),
+  )
+
+  fastify.post(
+    '/user/adm/sign-in',
+    { preHandler: [validateSchemaMiddleware(UserSignInDTO)] },
+    signInAdmUserController(prismaUserRepository),
   )
 
   fastify.get(

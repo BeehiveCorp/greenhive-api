@@ -3,6 +3,7 @@
     "dtos",
     "middlewares",
     "usecase",
-    "usecases"
+    "usecases",
+    "ambicoins"
   ]
 }

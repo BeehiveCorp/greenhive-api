@@ -4,6 +4,17 @@ import { ResponseHandler } from '../utils'
 import { InternalServerError, ValidationError } from '@/application/errors'
 
 export const validateSchemaMiddleware = (schema: z.Schema) => {
+  const customErrorMap: z.ZodErrorMap = (issue, ctx) => {
+    console.log(issue, ctx)
+    if (issue.code === z.ZodIssueCode.invalid_type) {
+      return { message: `Campo ${issue.path[0]} obrigatório` }
+    }
+
+    return { message: ctx.defaultError }
+  }
+
+  z.setErrorMap(customErrorMap)
+
   return async (
     request: FastifyRequest,
     reply: FastifyReply,
@@ -14,13 +25,9 @@ export const validateSchemaMiddleware = (schema: z.Schema) => {
       done()
     } catch (error) {
       if (error instanceof z.ZodError) {
-        const missingFields = error.issues
-          .map((issue) => issue.path.join('.'))
-          .join(', ')
+        const issues = error.issues.map((issue) => issue.message).join(', ')
 
-        const message = `O(s) campo(s) ${missingFields} está(ão) faltando na requisição.`
-
-        return ResponseHandler.error(reply, new ValidationError(message))
+        return ResponseHandler.error(reply, new ValidationError(issues))
       }
 
       return ResponseHandler.error(reply, new InternalServerError())

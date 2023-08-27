@@ -11,9 +11,286 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Permission {
+  COMMON
+  MANAGER
+  EMPLOYEE
+  ADMIN
+}
+
+enum Block {
+  QUESTION
+  BUBBLE
+}
+
+enum PostPlace {
+  PUBLIC
+  CORPORATE
+}
+
+model Company {
+  id           String   @id @default(uuid())
+  name         String
+  fantasy_name String
+  avatar_url   String?
+  owner_id     String?  @unique
+  created_at   DateTime @default(now())
+  updated_at   DateTime @default(now()) @updatedAt
+  //
+  users        User[]   @relation("CompanyEmployees")
+  owner        User?    @relation("CompanyOwner", fields: [owner_id], references: [id])
+  invites      Invite[]
+  posts        Post[]   @relation()
+
+  @@index([owner_id], name: "owner_id_idx")
+}
+
+model Hero {
+  id          String       @id @default(uuid())
+  name        String
+  description String
+  lore        String
+  avatar_url  String?
+  created_at  DateTime     @default(now())
+  updated_at  DateTime     @default(now()) @updatedAt
+  //
+  users       User[]
+  chapters    RpgChapter[]
+}
+
 model User {
-  id       String @id @default(cuid())
-  name     String
-  email    String @unique
-  password String
+  id               String                @id @default(uuid())
+  name             String
+  username         String                @unique @default("unknown")
+  email            String                @unique
+  password         String
+  xp               Int                   @default(0)
+  level            Int                   @default(0)
+  avatar_url       String?
+  ambicoins        Int                   @default(0)
+  permission       Permission            @default(COMMON)
+  company_id       String?
+  hero_id          String?
+  created_at       DateTime              @default(now())
+  updated_at       DateTime              @default(now()) @updatedAt
+  //
+  company          Company?              @relation("CompanyEmployees", fields: [company_id], references: [id])
+  owned_company    Company?              @relation("CompanyOwner")
+  hero             Hero?                 @relation(fields: [hero_id], references: [id])
+  articles         BlogArticle[]         @relation("Author")
+  read_articles    ReadBlogArticle[]     @relation("Reader")
+  played_chapters  ConcludedRpgChapter[] @relation("Player")
+  invites          Invite[]
+  followers        Network[]             @relation("Follower")
+  following        Network[]             @relation("Following")
+  collected_brands BrandCollection[]     @relation("Collector")
+  posts            Post[]                @relation("PostAuthor")
+  comments         Comment[]             @relation("CommentAuthor")
+
+  @@index([company_id], name: "company_id_idx")
+  @@index([hero_id], name: "user_hero_id_idx")
+}
+
+model BlogArticle {
+  id               String            @id @default(uuid())
+  title            String
+  thumbnail_url    String
+  content          String
+  xp_reward        Int
+  ambicoins_reward Int
+  views            Int
+  author_id        String
+  created_at       DateTime          @default(now())
+  updated_at       DateTime          @default(now()) @updatedAt
+  //
+  author           User              @relation("Author", fields: [author_id], references: [id])
+  readers          ReadBlogArticle[]
+  narrative_blocks NarrativeBlock[]
+
+  @@index([author_id], name: "author_id_idx")
+}
+
+model ReadBlogArticle {
+  id         String      @id @default(uuid())
+  reader_id  String
+  article_id String
+  created_at DateTime    @default(now())
+  updated_at DateTime    @default(now()) @updatedAt
+  //
+  reader     User        @relation("Reader", fields: [reader_id], references: [id])
+  article    BlogArticle @relation(fields: [article_id], references: [id])
+
+  @@index([reader_id], name: "reader_id_idx")
+  @@index([article_id], name: "read_article_id_idx")
+}
+
+model Difficulty {
+  id               String       @id @default(uuid())
+  name             String
+  hex_code         String
+  xp_reward        Int
+  ambicoins_reward Int
+  created_at       DateTime     @default(now())
+  updated_at       DateTime     @default(now()) @updatedAt
+  //
+  chapters         RpgChapter[]
+}
+
+model ConcludedRpgChapter {
+  id          String     @id @default(uuid())
+  player_id   String
+  chapter_id  String
+  created_at  DateTime   @default(now())
+  updated_at  DateTime   @default(now()) @updatedAt
+  //
+  user        User       @relation("Player", fields: [player_id], references: [id])
+  rpg_chapter RpgChapter @relation(fields: [chapter_id], references: [id])
+
+  @@index([player_id], name: "player_id_idx")
+  @@index([chapter_id], name: "chapter_id_idx")
+}
+
+model RpgChapter {
+  id               String                @id @default(uuid())
+  title            String
+  description      String
+  xp_reward        Int
+  ambicoins_reward Int
+  release_date     DateTime
+  hero_id          String
+  difficulty_id    String
+  created_at       DateTime              @default(now())
+  updated_at       DateTime              @default(now()) @updatedAt
+  //
+  hero             Hero                  @relation(fields: [hero_id], references: [id])
+  difficulty       Difficulty            @relation(fields: [difficulty_id], references: [id])
+  players          ConcludedRpgChapter[]
+  narrative_blocks NarrativeBlock[]
+
+  @@index([hero_id], name: "chapter_hero_id_idx")
+  @@index([difficulty_id], name: "difficulty_id_idx")
+}
+
+model Character {
+  id               String           @id @default(uuid())
+  name             String
+  description      String
+  avatar_url       String?
+  created_at       DateTime         @default(now())
+  updated_at       DateTime         @default(now()) @updatedAt
+  //
+  narrative_blocks NarrativeBlock[]
+}
+
+model NarrativeBlock {
+  id                 String           @id @default(uuid())
+  type               Block            @default(BUBBLE)
+  message            String?
+  question           String?
+  answer_explanation String?
+  order              Int
+  character_id       String?
+  article_id         String?
+  chapter_id         String
+  created_at         DateTime         @default(now())
+  updated_at         DateTime         @default(now()) @updatedAt
+  //
+  character          Character?       @relation(fields: [character_id], references: [id])
+  article            BlogArticle?     @relation(fields: [article_id], references: [id])
+  chapter            RpgChapter       @relation(fields: [chapter_id], references: [id])
+  question_options   QuestionOption[]
+
+  @@index([character_id], name: "character_id_idx")
+  @@index([article_id], name: "article_id_idx")
+  @@index([chapter_id], name: "narrative_block_chapter_id_idx")
+}
+
+model QuestionOption {
+  id                 String         @id @default(uuid())
+  description        String
+  is_correct         Boolean
+  narrative_block_id String
+  created_at         DateTime       @default(now())
+  updated_at         DateTime       @default(now()) @updatedAt
+  //
+  narrative_block    NarrativeBlock @relation(fields: [narrative_block_id], references: [id])
+
+  @@index([narrative_block_id], name: "narrative_block_id_idx")
+}
+
+model Invite {
+  id               String   @id @default(uuid())
+  was_accepted     Boolean
+  user_id          String
+  company_id       String
+  created_at       DateTime @default(now())
+  updated_at       DateTime @default(now()) @updatedAt
+  //
+  invited_user     User     @relation(fields: [user_id], references: [id])
+  inviting_company Company  @relation(fields: [company_id], references: [id])
+
+  @@index([user_id], name: "invited_user_id_idx")
+  @@index([company_id], name: "inviting_company_id_idx")
+}
+
+model Network {
+  id             String   @id @default(uuid())
+  follower_id    String
+  following_id   String
+  created_at     DateTime @default(now())
+  updated_at     DateTime @default(now()) @updatedAt
+  //
+  follower_user  User     @relation("Follower", fields: [follower_id], references: [id])
+  following_user User     @relation("Following", fields: [following_id], references: [id])
+
+  @@index([follower_id], name: "user_folower_id_idx")
+  @@index([following_id], name: "user_folowing_id_idx")
+}
+
+model BrandCollection {
+  id          String   @id @default(uuid())
+  picture_url String
+  name        String
+  user_id     String
+  created_at  DateTime @default(now())
+  updated_at  DateTime @default(now()) @updatedAt
+  //
+  collector   User     @relation("Collector", fields: [user_id], references: [id])
+
+  @@index([user_id], name: "collected_folower_id_idx")
+}
+
+model Post {
+  id          String    @id @default(uuid())
+  reactions   Int
+  type        PostPlace @default(PUBLIC)
+  description String
+  picture_url String
+  author_id   String
+  company_id  String?
+  created_at  DateTime  @default(now())
+  updated_at  DateTime  @default(now()) @updatedAt
+  //
+  author      User      @relation("PostAuthor", fields: [author_id], references: [id])
+  company     Company?  @relation(fields: [company_id], references: [id])
+  comments    Comment[]
+
+  @@index([author_id], name: "post_author_id_idx")
+  @@index([company_id], name: "company_posted_id_idx")
+}
+
+model Comment {
+  id          String   @id @default(uuid())
+  reactions   Int
+  description String
+  author_id   String
+  post_id     String
+  created_at  DateTime @default(now())
+  updated_at  DateTime @default(now()) @updatedAt
+  //
+  author      User     @relation("CommentAuthor", fields: [author_id], references: [id])
+  post        Post     @relation(fields: [post_id], references: [id])
+
+  @@index([author_id], name: "comment_author_id_idx")
+  @@index([post_id], name: "post_comment_id_idx")
 }
