@@ -31,7 +31,7 @@ export const createHeroController = (repository: HeroContract) => {
           fs.mkdirSync(folder, { recursive: true })
         }
 
-        fileName = `hero_${timestamp}-${part.filename}`
+        fileName = `${timestamp}-${part.filename}`
 
         await pump(
           part.file,

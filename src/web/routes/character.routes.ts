@@ -3,9 +3,7 @@ import { FastifyPluginCallback } from 'fastify'
 import { prisma } from '@/infrastructure/db/prisma'
 import { PrismaCharacterRepository } from '@/infrastructure/repositories'
 
-import { authMiddleware, validateSchemaMiddleware } from '@/web/middlewares'
-
-import { CharacterCreateDTO } from '@/infrastructure/dtos/character'
+import { authMiddleware } from '@/web/middlewares'
 
 import {
   createCharacterController,
@@ -17,11 +15,7 @@ export const characterRoutes: FastifyPluginCallback = (fastify, _, done) => {
 
   fastify.addHook('preHandler', authMiddleware())
 
-  fastify.post(
-    '/character/create',
-    { preHandler: validateSchemaMiddleware(CharacterCreateDTO) },
-    createCharacterController(prismaRepository),
-  )
+  fastify.post('/character/create', createCharacterController(prismaRepository))
 
   fastify.get('/character/all', listCharactersController(prismaRepository))
 

@@ -3,9 +3,7 @@ import { FastifyPluginCallback } from 'fastify'
 import { prisma } from '@/infrastructure/db/prisma'
 import { PrismaHeroRepository } from '@/infrastructure/repositories'
 
-import { authMiddleware, validateSchemaMiddleware } from '@/web/middlewares'
-
-import { HeroCreateDTO } from '@/infrastructure/dtos/hero'
+import { authMiddleware } from '@/web/middlewares'
 
 import {
   createHeroController,

@@ -12,7 +12,9 @@ export const buildApp = () => {
 
   const app = fastify()
 
-  app.register(multipart)
+  app.register(multipart, {
+    limits: { fileSize: 10 * 1000000 }, // limit to 10mb
+  })
   app.register(cors)
   app.register(router)
 

@@ -13,7 +13,7 @@ export class Character {
   public readonly id?: string
   public readonly name: string
   public readonly description: string
-  public readonly avatar_url: string | null
+  public avatar_url: string | null
   public readonly created_at: Date
   public readonly updated_at: Date
 
