@@ -5,7 +5,7 @@ type THero = {
   name: string
   description: string
   lore: string
-  avatar_url: string | null
+  avatar_url: string
   created_at: Date
   updated_at: Date
 }
@@ -15,7 +15,7 @@ export class Hero {
   public readonly name: string
   public readonly description: string
   public readonly lore: string
-  public avatar_url: string | null
+  public avatar_url: string
   public readonly created_at: Date
   public readonly updated_at: Date
 

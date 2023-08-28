@@ -50,7 +50,7 @@ model Hero {
   name        String
   description String
   lore        String
-  avatar_url  String?
+  avatar_url  String
   created_at  DateTime     @default(now())
   updated_at  DateTime     @default(now()) @updatedAt
   //
@@ -175,7 +175,7 @@ model Character {
   id               String           @id @default(uuid())
   name             String
   description      String
-  avatar_url       String?
+  avatar_url       String
   created_at       DateTime         @default(now())
   updated_at       DateTime         @default(now()) @updatedAt
   //
