@@ -1,7 +1,9 @@
 import { FastifyRequest, FastifyReply } from 'fastify'
 import { z } from 'zod'
-import { ResponseHandler } from '../utils'
+
 import { InternalServerError, ValidationError } from '@/application/errors'
+
+import { ResponseHandler } from '../utils'
 
 export const validateSchemaMiddleware = (schema: z.Schema) => {
   const customErrorMap: z.ZodErrorMap = (issue, ctx) => {
