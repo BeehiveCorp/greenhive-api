@@ -4,11 +4,7 @@ import { ResponseHandler } from '../utils'
 import { UnauthorizedError } from '@/application/errors'
 
 export const authMiddleware = () => {
-  return async (
-    request: FastifyRequest,
-    reply: FastifyReply,
-    done: () => void,
-  ) => {
+  return async (request: FastifyRequest, reply: FastifyReply) => {
     const token = request.headers?.authorization
 
     if (!token) return ResponseHandler.error(reply, new UnauthorizedError())
@@ -19,8 +15,6 @@ export const authMiddleware = () => {
       if (typeof decoded !== 'string') {
         request.userId = decoded?.userId ?? null
       }
-
-      done()
     } catch {
       ResponseHandler.error(reply, new UnauthorizedError())
     }

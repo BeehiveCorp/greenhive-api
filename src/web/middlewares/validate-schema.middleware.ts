@@ -5,7 +5,6 @@ import { InternalServerError, ValidationError } from '@/application/errors'
 
 export const validateSchemaMiddleware = (schema: z.Schema) => {
   const customErrorMap: z.ZodErrorMap = (issue, ctx) => {
-    console.log(issue, ctx)
     if (issue.code === z.ZodIssueCode.invalid_type) {
       return { message: `Campo ${issue.path[0]} obrigatório` }
     }
@@ -15,14 +14,9 @@ export const validateSchemaMiddleware = (schema: z.Schema) => {
 
   z.setErrorMap(customErrorMap)
 
-  return async (
-    request: FastifyRequest,
-    reply: FastifyReply,
-    done: () => void,
-  ) => {
+  return async (request: FastifyRequest, reply: FastifyReply) => {
     try {
       schema.parse(request.body)
-      done()
     } catch (error) {
       if (error instanceof z.ZodError) {
         const issues = error.issues.map((issue) => issue.message).join(', ')
