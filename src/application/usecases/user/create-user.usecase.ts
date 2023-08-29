@@ -14,9 +14,14 @@ export class CreateUserUseCase implements ICreateUserUseCase {
   }
 
   async execute(user: User): Promise<User> {
-    const userExists = await this.userRepository.findByEmail(user.email)
+    const emailExists = await this.userRepository.findByEmail(user.email)
 
-    if (userExists) throw new ConflictError('Email em uso.')
+    const usernameExists = await this.userRepository.findByUsername(
+      user.username,
+    )
+
+    if (emailExists) throw new ConflictError('Email em uso.')
+    if (usernameExists) throw new ConflictError('Username em uso.')
 
     const created = await this.userRepository.create(user)
 

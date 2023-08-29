@@ -18,7 +18,7 @@ export class PrismaUserRepository implements UserContract {
   async create(user: User): Promise<User> {
     console.log(user)
 
-    const createdUser = await this._prisma.user.create({ data: user.data })
+    const createdUser = await this._prisma.user.create({ data: user })
     return createdUser
   }
 
@@ -28,5 +28,13 @@ export class PrismaUserRepository implements UserContract {
     })
 
     return userFound
+  }
+
+  async findByUsername(username: string): Promise<User | null> {
+    const found: User | null = await this._prisma.user.findFirst({
+      where: { username },
+    })
+
+    return found
   }
 }

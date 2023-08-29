@@ -17,6 +17,8 @@ export const signInUserController = (prismaUserRepository: UserContract) => {
     if (!foundUser?.id)
       return reply.status(404).send({ message: 'User not found' })
 
+    delete foundUser?.password
+
     return reply.status(200).send({
       user: foundUser,
       token: generateJwtToken(foundUser.id),

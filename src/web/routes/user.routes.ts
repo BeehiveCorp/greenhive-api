@@ -12,6 +12,8 @@ import {
   listUsersController,
   signInUserController,
   signInAdmUserController,
+  findByUsernameController,
+  findByEmailController,
 } from '@/web/controllers/user'
 
 export const userRoutes: FastifyPluginCallback = (fastify, _, done) => {
@@ -40,6 +42,13 @@ export const userRoutes: FastifyPluginCallback = (fastify, _, done) => {
     { preHandler: [authMiddleware()] },
     listUsersController(prismaUserRepository),
   )
+
+  fastify.get(
+    '/user/username/:username',
+    findByUsernameController(prismaUserRepository),
+  )
+
+  fastify.get('/user/email/:email', findByEmailController(prismaUserRepository))
 
   done()
 }

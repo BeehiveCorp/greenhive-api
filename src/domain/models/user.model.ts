@@ -5,7 +5,7 @@ type TUser = {
   name: string
   username: string
   email: string
-  password: string
+  password?: string | null
   xp: number
   level: number
   avatar_url: string
@@ -18,65 +18,50 @@ type TUser = {
 }
 
 export class User {
-  public readonly data: TUser
+  public readonly id?: string
+  public readonly name: string
+  public readonly username: string
+  public readonly email: string
+  public password?: string | null
+  public readonly xp: number
+  public readonly level: number
+  public readonly avatar_url: string
+  public readonly ambicoins: number
+  public readonly permission: 'COMMON' | 'MANAGER' | 'EMPLOYEE' | 'ADMIN'
+  public readonly company: string
+  public readonly hero: string
+  public readonly created_at: string
+  public readonly updated_at: string
 
-  constructor(data: TUser) {
-    this.data = data
-  }
-
-  get id(): string | undefined {
-    return this.data.id
-  }
-
-  get name(): string {
-    return this.data.name
-  }
-
-  get username(): string {
-    return this.data.username
-  }
-
-  get email(): string {
-    return this.data.email
-  }
-
-  get password(): string {
-    return this.data.password
-  }
-
-  get xp(): number {
-    return this.data.xp
-  }
-
-  get level(): number {
-    return this.data.level
-  }
-
-  get avatar_url(): string {
-    return this.data.avatar_url
-  }
-
-  get ambicoins(): number {
-    return this.data.ambicoins
-  }
-
-  get permission(): 'COMMON' | 'MANAGER' | 'EMPLOYEE' | 'ADMIN' {
-    return this.data.permission
-  }
-
-  get company(): string {
-    return this.data.company
-  }
-
-  get hero(): string {
-    return this.data.hero
-  }
-
-  get created_at(): string {
-    return this.data.created_at
-  }
-
-  get updated_at(): string {
-    return this.data.updated_at
+  constructor({
+    id,
+    name,
+    username,
+    email,
+    password,
+    xp,
+    level,
+    avatar_url,
+    ambicoins,
+    permission,
+    company,
+    hero,
+    created_at,
+    updated_at,
+  }: TUser) {
+    this.id = id
+    this.name = name
+    this.username = username
+    this.email = email
+    this.password = password
+    this.xp = xp
+    this.level = level
+    this.avatar_url = avatar_url
+    this.ambicoins = ambicoins
+    this.permission = permission
+    this.company = company
+    this.hero = hero
+    this.created_at = created_at
+    this.updated_at = updated_at
   }
 }
