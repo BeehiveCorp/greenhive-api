@@ -46,53 +46,53 @@ model Company {
 }
 
 model Hero {
-  id          String       @id @default(uuid())
+  id          String    @id @default(uuid())
   name        String
   description String
   lore        String
   avatar_url  String
-  created_at  DateTime     @default(now())
-  updated_at  DateTime     @default(now()) @updatedAt
+  created_at  DateTime  @default(now())
+  updated_at  DateTime  @default(now()) @updatedAt
   //
   users       User[]
-  chapters    RpgChapter[]
+  chapters    Chapter[]
 }
 
 model User {
-  id               String                @id @default(uuid())
+  id               String             @id @default(uuid())
   name             String
-  username         String                @unique @default("unknown")
-  email            String                @unique
+  username         String             @unique @default("unknown")
+  email            String             @unique
   password         String
-  xp               Int                   @default(0)
-  level            Int                   @default(0)
+  xp               Int                @default(0)
+  level            Int                @default(0)
   avatar_url       String?
-  ambicoins        Int                   @default(0)
-  permission       Permission            @default(COMMON)
+  ambicoins        Int                @default(0)
+  permission       Permission         @default(COMMON)
   company_id       String?
   hero_id          String?
-  created_at       DateTime              @default(now())
-  updated_at       DateTime              @default(now()) @updatedAt
+  created_at       DateTime           @default(now())
+  updated_at       DateTime           @default(now()) @updatedAt
   //
-  company          Company?              @relation("CompanyEmployees", fields: [company_id], references: [id])
-  owned_company    Company?              @relation("CompanyOwner")
-  hero             Hero?                 @relation(fields: [hero_id], references: [id])
-  articles         BlogArticle[]         @relation("Author")
-  read_articles    ReadBlogArticle[]     @relation("Reader")
-  played_chapters  ConcludedRpgChapter[] @relation("Player")
+  company          Company?           @relation("CompanyEmployees", fields: [company_id], references: [id])
+  owned_company    Company?           @relation("CompanyOwner")
+  hero             Hero?              @relation(fields: [hero_id], references: [id])
+  articles         Article[]          @relation("Author")
+  read_articles    ReadArticle[]      @relation("Reader")
+  played_chapters  ConcludedChapter[] @relation("Player")
   invites          Invite[]
-  followers        Network[]             @relation("Follower")
-  following        Network[]             @relation("Following")
-  collected_brands BrandCollection[]     @relation("Collector")
-  posts            Post[]                @relation("PostAuthor")
-  comments         Comment[]             @relation("CommentAuthor")
+  followers        Network[]          @relation("Follower")
+  following        Network[]          @relation("Following")
+  collected_brands BrandCollection[]  @relation("Collector")
+  posts            Post[]             @relation("PostAuthor")
+  comments         Comment[]          @relation("CommentAuthor")
 
   @@index([company_id], name: "company_id_idx")
   @@index([hero_id], name: "user_hero_id_idx")
 }
 
-model BlogArticle {
-  id               String            @id @default(uuid())
+model Article {
+  id               String           @id @default(uuid())
   title            String
   thumbnail_url    String
   content          String
@@ -100,58 +100,58 @@ model BlogArticle {
   ambicoins_reward Int
   views            Int
   author_id        String
-  created_at       DateTime          @default(now())
-  updated_at       DateTime          @default(now()) @updatedAt
+  created_at       DateTime         @default(now())
+  updated_at       DateTime         @default(now()) @updatedAt
   //
-  author           User              @relation("Author", fields: [author_id], references: [id])
-  readers          ReadBlogArticle[]
+  author           User             @relation("Author", fields: [author_id], references: [id])
+  readers          ReadArticle[]
   narrative_blocks NarrativeBlock[]
 
   @@index([author_id], name: "author_id_idx")
 }
 
-model ReadBlogArticle {
-  id         String      @id @default(uuid())
+model ReadArticle {
+  id         String   @id @default(uuid())
   reader_id  String
   article_id String
-  created_at DateTime    @default(now())
-  updated_at DateTime    @default(now()) @updatedAt
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now()) @updatedAt
   //
-  reader     User        @relation("Reader", fields: [reader_id], references: [id])
-  article    BlogArticle @relation(fields: [article_id], references: [id])
+  reader     User     @relation("Reader", fields: [reader_id], references: [id])
+  article    Article  @relation(fields: [article_id], references: [id])
 
   @@index([reader_id], name: "reader_id_idx")
   @@index([article_id], name: "read_article_id_idx")
 }
 
 model Difficulty {
-  id               String       @id @default(uuid())
+  id               String    @id @default(uuid())
   name             String
   hex_code         String
   xp_reward        Int
   ambicoins_reward Int
-  created_at       DateTime     @default(now())
-  updated_at       DateTime     @default(now()) @updatedAt
+  created_at       DateTime  @default(now())
+  updated_at       DateTime  @default(now()) @updatedAt
   //
-  chapters         RpgChapter[]
+  chapters         Chapter[]
 }
 
-model ConcludedRpgChapter {
-  id          String     @id @default(uuid())
+model ConcludedChapter {
+  id          String   @id @default(uuid())
   player_id   String
   chapter_id  String
-  created_at  DateTime   @default(now())
-  updated_at  DateTime   @default(now()) @updatedAt
+  created_at  DateTime @default(now())
+  updated_at  DateTime @default(now()) @updatedAt
   //
-  user        User       @relation("Player", fields: [player_id], references: [id])
-  rpg_chapter RpgChapter @relation(fields: [chapter_id], references: [id])
+  user        User     @relation("Player", fields: [player_id], references: [id])
+  rpg_chapter Chapter  @relation(fields: [chapter_id], references: [id])
 
   @@index([player_id], name: "player_id_idx")
   @@index([chapter_id], name: "chapter_id_idx")
 }
 
-model RpgChapter {
-  id               String                @id @default(uuid())
+model Chapter {
+  id               String             @id @default(uuid())
   title            String
   description      String
   xp_reward        Int
@@ -159,12 +159,12 @@ model RpgChapter {
   release_date     DateTime
   hero_id          String
   difficulty_id    String
-  created_at       DateTime              @default(now())
-  updated_at       DateTime              @default(now()) @updatedAt
+  created_at       DateTime           @default(now())
+  updated_at       DateTime           @default(now()) @updatedAt
   //
-  hero             Hero                  @relation(fields: [hero_id], references: [id])
-  difficulty       Difficulty            @relation(fields: [difficulty_id], references: [id])
-  players          ConcludedRpgChapter[]
+  hero             Hero               @relation(fields: [hero_id], references: [id])
+  difficulty       Difficulty         @relation(fields: [difficulty_id], references: [id])
+  players          ConcludedChapter[]
   narrative_blocks NarrativeBlock[]
 
   @@index([hero_id], name: "chapter_hero_id_idx")
@@ -196,8 +196,8 @@ model NarrativeBlock {
   updated_at         DateTime         @default(now()) @updatedAt
   //
   character          Character?       @relation(fields: [character_id], references: [id])
-  article            BlogArticle?     @relation(fields: [article_id], references: [id])
-  chapter            RpgChapter       @relation(fields: [chapter_id], references: [id])
+  article            Article?         @relation(fields: [article_id], references: [id])
+  chapter            Chapter          @relation(fields: [chapter_id], references: [id])
   question_options   QuestionOption[]
 
   @@index([character_id], name: "character_id_idx")
