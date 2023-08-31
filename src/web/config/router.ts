@@ -5,6 +5,7 @@ import {
   userRoutes,
   heroRoutes,
   characterRoutes,
+  articleRoutes,
 } from '@/web/routes'
 
 export const router: FastifyPluginCallback = (fastify, _, done) => {
@@ -12,5 +13,6 @@ export const router: FastifyPluginCallback = (fastify, _, done) => {
   fastify.register(difficultyRoutes)
   fastify.register(heroRoutes)
   fastify.register(characterRoutes)
+  fastify.register(articleRoutes)
   done()
 }
