@@ -16,8 +16,6 @@ export class PrismaDifficultyRepository implements DifficultyContract {
   }
 
   async create(difficulty: Difficulty): Promise<Difficulty> {
-    console.log('create')
-
     const createdDifficulty = await this._prisma.difficulty.create({
       data: difficulty,
     })

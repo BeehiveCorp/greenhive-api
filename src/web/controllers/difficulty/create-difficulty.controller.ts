@@ -17,8 +17,6 @@ export const createDifficultyController = (
       prismaRepository,
     )
 
-    console.log('createDifficultyController')
-
     const createdDifficulty = await createDifficultyUseCase.execute(difficulty)
 
     return reply.send(createdDifficulty)

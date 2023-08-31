@@ -13,8 +13,6 @@ import {
 export const characterRoutes: FastifyPluginCallback = (fastify, _, done) => {
   const prismaRepository = new PrismaCharacterRepository(prisma)
 
-  fastify.addHook('preHandler', authMiddleware())
-
   fastify.post('/character/create', createCharacterController(prismaRepository))
 
   fastify.get('/character/all', listCharactersController(prismaRepository))

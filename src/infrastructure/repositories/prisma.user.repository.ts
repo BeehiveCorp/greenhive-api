@@ -16,8 +16,6 @@ export class PrismaUserRepository implements UserContract {
   }
 
   async create(user: User): Promise<User> {
-    console.log(user)
-
     const createdUser = await this._prisma.user.create({ data: user })
     return createdUser
   }

@@ -15,8 +15,6 @@ import {
 export const difficultyRoutes: FastifyPluginCallback = (fastify, _, done) => {
   const prismaDifficultyRepository = new PrismaDifficultyRepository(prisma)
 
-  fastify.addHook('preHandler', authMiddleware())
-
   fastify.post(
     '/difficulty/create',
     { preHandler: validateSchemaMiddleware(DifficultyCreateDTO) },

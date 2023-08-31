@@ -13,7 +13,6 @@ export class CreateDifficultyUseCase implements ICreateDifficultyUseCase {
   }
 
   async execute(difficulty: Difficulty): Promise<Difficulty> {
-    console.log('execute')
     const created = await this.difficultyRepository.create(difficulty)
     return created
   }

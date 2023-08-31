@@ -4,6 +4,7 @@ import { User } from '@/domain/models'
 
 import { UserContract } from '@/application/contracts'
 import { CreateUserUseCase } from '@/application/usecases/user'
+import { generateJwtToken } from '@/web/utils'
 
 export const createUserController = (prismaUserRepository: UserContract) => {
   return async (request: FastifyRequest, reply: FastifyReply) => {
@@ -14,6 +15,9 @@ export const createUserController = (prismaUserRepository: UserContract) => {
     const createUserUseCase = new CreateUserUseCase(prismaUserRepository)
     const createdUser = await createUserUseCase.execute(user)
 
-    return reply.send(createdUser)
+    return reply.status(200).send({
+      user: createdUser,
+      token: generateJwtToken(createdUser?.id ?? ''),
+    })
   }
 }
