@@ -17,9 +17,13 @@ export const signInAdmUserController = (prismaUserRepository: UserContract) => {
     if (!foundUser?.id)
       return reply.status(404).send({ message: 'User not found' })
 
+    const token = generateJwtToken(foundUser.id)
+
+    console.log(token)
+
     return reply.status(200).send({
       user: foundUser,
-      token: generateJwtToken(foundUser.id),
+      token,
     })
   }
 }

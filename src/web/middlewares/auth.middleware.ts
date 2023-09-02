@@ -7,6 +7,8 @@ export const authMiddleware = () => {
   return async (request: FastifyRequest, reply: FastifyReply) => {
     const token = request.headers?.authorization
 
+    console.log('token', token)
+
     if (!token) return ResponseHandler.error(reply, new UnauthorizedError())
 
     try {
