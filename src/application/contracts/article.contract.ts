@@ -5,5 +5,4 @@ export interface ArticleContract {
   findAll(): Promise<Article[]>
   findById(id: string): Promise<Article | null>
   view(article: Article): Promise<void | null>
-  read(article: Article): void
 }

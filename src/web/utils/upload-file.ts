@@ -28,8 +28,6 @@ async function uploadFile<T>({
   let fileName: string | null = null
 
   for await (const part of parts) {
-    console.log(part.type)
-
     if (part.type === 'file') {
       const root = path.join(__dirname, '../../../')
       const folder = path.join(root, 'fake-s3', folderName)

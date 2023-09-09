@@ -11,7 +11,11 @@ export class PrismaArticleRepository implements ArticleContract {
   }
 
   async findAll(): Promise<Article[]> {
-    const found = await this._prisma.article.findMany()
+    const found = await this._prisma.article.findMany({
+      include: {
+        author: true,
+      },
+    })
     return found
   }
 
@@ -33,9 +37,5 @@ export class PrismaArticleRepository implements ArticleContract {
       where: { id: article.id },
       data: { views: article.views + 1 },
     })
-  }
-
-  async read(article: Article): Promise<void> {
-    throw new Error('Method not implemented.')
   }
 }

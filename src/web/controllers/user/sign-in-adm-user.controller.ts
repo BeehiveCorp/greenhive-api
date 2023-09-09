@@ -19,8 +19,6 @@ export const signInAdmUserController = (prismaUserRepository: UserContract) => {
 
     const token = generateJwtToken(foundUser.id)
 
-    console.log(token)
-
     return reply.status(200).send({
       user: foundUser,
       token,
