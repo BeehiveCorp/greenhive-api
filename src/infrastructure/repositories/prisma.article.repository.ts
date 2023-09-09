@@ -23,11 +23,19 @@ export class PrismaArticleRepository implements ArticleContract {
     return created
   }
 
-  async view(article: Article): void {
-    throw new Error('Method not implemented.')
+  async findById(id: string): Promise<Article | null> {
+    const found = await this._prisma.article.findUnique({ where: { id } })
+    return found
   }
 
-  async read(article: Article): void {
+  async view(article: Article): Promise<void> {
+    await this._prisma.article.update({
+      where: { id: article.id },
+      data: { views: article.views + 1 },
+    })
+  }
+
+  async read(article: Article): Promise<void> {
     throw new Error('Method not implemented.')
   }
 }

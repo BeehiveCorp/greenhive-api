@@ -1,6 +1,6 @@
 import { BaseError } from '@/application/errors'
 
-export class AuthorizationError extends BaseError {
+export class BadRequestError extends BaseError {
   constructor(message = 'Solicitação inválida.') {
     super(message)
   }

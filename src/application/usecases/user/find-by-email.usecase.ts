@@ -2,7 +2,7 @@ import { UserContract } from '@/application/contracts'
 import { User } from '@/domain/models'
 
 interface IFindByEmailUseCase {
-  execute: UserContract['findByUsername']
+  execute: UserContract['findByEmail']
 }
 
 export class FindByEmailUseCase implements IFindByEmailUseCase {

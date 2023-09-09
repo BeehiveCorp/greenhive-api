@@ -1,2 +1,2 @@
 export * from './create-hero.controller'
-export * from './list-hero.controller'
+export * from './list-heroes.controller'

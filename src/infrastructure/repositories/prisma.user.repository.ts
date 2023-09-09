@@ -28,6 +28,14 @@ export class PrismaUserRepository implements UserContract {
     return userFound
   }
 
+  async findById(id: string): Promise<User | null> {
+    const userFound: User | null = await this._prisma.user.findUnique({
+      where: { id },
+    })
+
+    return userFound
+  }
+
   async findByUsername(username: string): Promise<User | null> {
     const found: User | null = await this._prisma.user.findFirst({
       where: { username },

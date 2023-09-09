@@ -13,11 +13,13 @@ import {
 export const heroRoutes: FastifyPluginCallback = (fastify, _, done) => {
   const prismaRepository = new PrismaHeroRepository(prisma)
 
-  fastify.addHook('preHandler', authMiddleware())
-
   fastify.get('/hero/all', listHeroesController(prismaRepository))
 
-  fastify.post('/hero/create', createHeroController(prismaRepository))
+  fastify.post(
+    '/hero/create',
+    { preHandler: [authMiddleware()] },
+    createHeroController(prismaRepository),
+  )
 
   done()
 }
