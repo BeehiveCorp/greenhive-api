@@ -10,6 +10,15 @@ export class PrismaUserRepository implements UserContract {
     this._prisma = prisma
   }
 
+  async update(user: User): Promise<User> {
+    const updated = await this._prisma.user.update({
+      where: { id: user.id },
+      data: user,
+    })
+
+    return updated
+  }
+
   async findAll(): Promise<User[]> {
     const foundUsers = await this._prisma.user.findMany()
     return foundUsers
@@ -23,6 +32,9 @@ export class PrismaUserRepository implements UserContract {
   async findByEmail(email: string): Promise<User | null> {
     const userFound: User | null = await this._prisma.user.findFirst({
       where: { email },
+      include: {
+        hero: true,
+      },
     })
 
     return userFound

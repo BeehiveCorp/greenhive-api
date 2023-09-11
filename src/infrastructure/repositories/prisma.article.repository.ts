@@ -14,9 +14,30 @@ export class PrismaArticleRepository implements ArticleContract {
     const found = await this._prisma.article.findMany({
       include: {
         author: true,
+        readers: {
+          select: {
+            reader: {
+              select: {
+                id: true,
+              },
+            },
+          },
+        },
       },
     })
-    return found
+
+    const flattenedResults = found.map((article) => {
+      const readerIds = article.readers.map(
+        (readerEntry) => readerEntry.reader.id,
+      )
+
+      return {
+        ...article,
+        readers: readerIds,
+      }
+    })
+
+    return flattenedResults
   }
 
   async create(article: Article): Promise<Article> {
@@ -28,8 +49,34 @@ export class PrismaArticleRepository implements ArticleContract {
   }
 
   async findById(id: string): Promise<Article | null> {
-    const found = await this._prisma.article.findUnique({ where: { id } })
-    return found
+    const found = await this._prisma.article.findUnique({
+      where: { id },
+      include: {
+        author: true,
+        readers: {
+          select: {
+            reader: {
+              select: {
+                id: true,
+              },
+            },
+          },
+        },
+      },
+    })
+
+    if (!found) {
+      return null
+    }
+
+    const readerIds = found.readers.map((readerEntry) => readerEntry.reader.id)
+
+    const articleWithReaderIds = {
+      ...found,
+      readers: readerIds,
+    }
+
+    return articleWithReaderIds
   }
 
   async view(article: Article): Promise<void> {

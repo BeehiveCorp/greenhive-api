@@ -14,6 +14,7 @@ import {
   signInAdmUserController,
   findByUsernameController,
   findByEmailController,
+  updateGamifiedStatsController,
 } from '@/web/controllers/user'
 
 export const userRoutes: FastifyPluginCallback = (fastify, _, done) => {
@@ -49,6 +50,12 @@ export const userRoutes: FastifyPluginCallback = (fastify, _, done) => {
   )
 
   fastify.get('/user/email/:email', findByEmailController(prismaUserRepository))
+
+  fastify.put(
+    '/user/update-gamified-stats',
+    { preHandler: [authMiddleware()] },
+    updateGamifiedStatsController(prismaUserRepository),
+  )
 
   done()
 }

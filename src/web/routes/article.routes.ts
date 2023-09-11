@@ -9,6 +9,7 @@ import {
   createArticleController,
   listArticlesController,
   viewArticleController,
+  findArticleController,
 } from '@/web/controllers/article'
 
 export const articleRoutes: FastifyPluginCallback = (fastify, _, done) => {
@@ -23,6 +24,8 @@ export const articleRoutes: FastifyPluginCallback = (fastify, _, done) => {
   )
 
   fastify.get('/article/view/:id', viewArticleController(prismaRepository))
+
+  fastify.get('/article/:id', findArticleController(prismaRepository))
 
   done()
 }
