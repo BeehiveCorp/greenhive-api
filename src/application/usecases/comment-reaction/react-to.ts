@@ -1,8 +1,8 @@
 /* eslint-disable camelcase */
 import {
-  PostContract,
-  PostReactionContract,
+  CommentReactionContract,
   UserContract,
+  CommentContract,
 } from '@/application/contracts'
 
 import { NotFoundError } from '@/application/errors'
@@ -12,27 +12,27 @@ interface IReactToUseCase {
 }
 
 export class ReactToUseCase implements IReactToUseCase {
-  private readonly postRepository: PostContract
+  private readonly commentRepository: CommentContract
   private readonly userRepository: UserContract
-  private readonly postReactionRepository: PostReactionContract
+  private readonly commentReactionRepository: CommentReactionContract
 
   constructor(
-    postRepository: PostContract,
+    commentRepository: CommentContract,
     userRepository: UserContract,
-    postReactionRepository: PostReactionContract,
+    commentReactionRepository: CommentReactionContract,
   ) {
-    this.postRepository = postRepository
+    this.commentRepository = commentRepository
     this.userRepository = userRepository
-    this.postReactionRepository = postReactionRepository
+    this.commentReactionRepository = commentReactionRepository
   }
 
   async execute(who_reacted_id: string, post_id: string): Promise<void> {
     const whoReacted = await this.userRepository.findById(who_reacted_id)
-    const reactedPost = await this.postRepository.findById(post_id)
+    const reactedComment = await this.commentRepository.findById(post_id)
 
     if (!whoReacted) throw new NotFoundError('Usuário não encontrado.')
-    if (!reactedPost) throw new NotFoundError('Postagem não encontrada.')
+    if (!reactedComment) throw new NotFoundError('Comentário não encontrado.')
 
-    await this.postReactionRepository.create(reactedPost, whoReacted)
+    await this.commentReactionRepository.create(reactedComment, whoReacted)
   }
 }

@@ -279,15 +279,15 @@ model PostReaction {
 model CommentReaction {
   id         String   @id @default(uuid())
   user_id    String
-  post_id    String
+  comment_id String
   created_at DateTime @default(now())
   updated_at DateTime @default(now()) @updatedAt
   //
   user       User     @relation("WhoReactedInComment", fields: [user_id], references: [id])
-  comment    Comment  @relation(fields: [post_id], references: [id])
+  comment    Comment  @relation(fields: [comment_id], references: [id])
 
   @@index([user_id], name: "comment_who_reacted_id_idx")
-  @@index([post_id], name: "comment_reacted_post_id_idx")
+  @@index([comment_id], name: "comment_reacted_post_id_idx")
 }
 
 model Post {

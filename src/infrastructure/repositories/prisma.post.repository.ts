@@ -35,12 +35,25 @@ export class PrismaPostRepository implements PostContract {
   async findById(id: string): Promise<Post | null> {
     const found = await this._prisma.post.findFirst({
       where: { id },
-      include: { author: true, comments: true, reactions: true },
+      include: {
+        author: true,
+        comments: { include: { reactions: true } },
+        reactions: true,
+      },
     })
 
     const whoReactedIds = _.map(found?.reactions, 'user_id')
 
-    const articleWithReaderIds = { ...found, reactions: whoReactedIds } as Post
+    const commentsFlattenedResults = _.map(found?.comments, (comment) => ({
+      ...comment,
+      reactions: _.map(comment.reactions, 'user_id'),
+    }))
+
+    const articleWithReaderIds = {
+      ...found,
+      reactions: whoReactedIds,
+      comments: commentsFlattenedResults,
+    } as Post
 
     return articleWithReaderIds
   }

@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client'
+import _ from 'lodash'
 
 import { CommentContract } from '@/application/contracts'
 import { Comment } from '@/domain/models'
@@ -8,6 +9,22 @@ export class PrismaCommentRepository implements CommentContract {
 
   constructor(prisma: PrismaClient) {
     this._prisma = prisma
+  }
+
+  async findById(id: string): Promise<Comment | null> {
+    const found = await this._prisma.comment.findFirst({
+      where: { id },
+      include: { author: true, reactions: true },
+    })
+
+    const whoReactedIds = _.map(found?.reactions, 'user_id')
+
+    const articleWithReaderIds = {
+      ...found,
+      reactions: whoReactedIds,
+    }
+
+    return articleWithReaderIds as Comment
   }
 
   async create(comment: Comment): Promise<Comment> {

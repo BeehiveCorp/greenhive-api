@@ -3,10 +3,10 @@ type TPost = {
   type: 'PUBLIC' | 'CORPORATE'
   description: string
   picture_url: string
+  author_id: string
   company_id?: string | null
   created_at: Date
   updated_at: Date
-  author_id: string
 }
 
 export class Post {
