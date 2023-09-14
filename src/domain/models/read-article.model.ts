@@ -1,4 +1,4 @@
-type TArticle = {
+type TReadArticle = {
   id?: string
   reader_id: string
   article_id: string
@@ -13,7 +13,7 @@ export class ReadArticle {
   public readonly created_at: Date
   public readonly updated_at: Date
 
-  constructor(data: TArticle) {
+  constructor(data: TReadArticle) {
     this.id = data.id
     this.reader_id = data.reader_id
     this.article_id = data.article_id

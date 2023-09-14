@@ -2,7 +2,7 @@
 
 import { FastifyReply, FastifyRequest } from 'fastify'
 
-import { ReadArticle } from '@/domain/models'
+import { PostReaction } from '@/domain/models'
 
 import {
   PostContract,
@@ -18,7 +18,7 @@ export const reactToController = (
   postReactionRepository: PostReactionContract,
 ) => {
   return async (request: FastifyRequest, reply: FastifyReply) => {
-    const { article_id, reader_id } = request.body as ReadArticle
+    const { post_id, user_id } = request.body as PostReaction
 
     const useCase = new ReactToUseCase(
       postRepository,
@@ -26,7 +26,7 @@ export const reactToController = (
       postReactionRepository,
     )
 
-    const created = await useCase.execute(article_id, reader_id)
+    const created = await useCase.execute(user_id, post_id)
 
     return reply.send(created)
   }

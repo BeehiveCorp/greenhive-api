@@ -3,7 +3,7 @@ import { FastifyReply, FastifyRequest } from 'fastify'
 import { Post } from '@/domain/models'
 
 import { PostContract } from '@/application/contracts'
-import { CreatePostUseCase } from '@/application/usecases/post'
+import { CreateUseCase } from '@/application/usecases/post'
 
 import { ResponseHandler } from '@/web/utils'
 import { InternalServerError } from '@/application/errors'
@@ -25,7 +25,7 @@ export const createPostController = (repository: PostContract) => {
 
     post.picture_url = `/fake-s3/post/${fileName}`
 
-    const useCase = new CreatePostUseCase(repository)
+    const useCase = new CreateUseCase(repository)
 
     const created = await useCase.execute(post)
 

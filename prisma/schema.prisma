@@ -303,7 +303,7 @@ model Post {
   author      User           @relation("PostAuthor", fields: [author_id], references: [id])
   company     Company?       @relation(fields: [company_id], references: [id])
   comments    Comment[]
-  whoReacted  PostReaction[]
+  reactions   PostReaction[]
 
   @@index([author_id], name: "post_author_id_idx")
   @@index([company_id], name: "company_posted_id_idx")
@@ -319,7 +319,7 @@ model Comment {
   //
   author      User              @relation("CommentAuthor", fields: [author_id], references: [id])
   post        Post              @relation(fields: [post_id], references: [id])
-  whoReacted  CommentReaction[]
+  reactions   CommentReaction[]
 
   @@index([author_id], name: "comment_author_id_idx")
   @@index([post_id], name: "post_comment_id_idx")
