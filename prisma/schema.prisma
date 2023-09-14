@@ -86,6 +86,8 @@ model User {
   collected_brands BrandCollection[]  @relation("Collector")
   posts            Post[]             @relation("PostAuthor")
   comments         Comment[]          @relation("CommentAuthor")
+  postsReacted     PostReaction[]     @relation("WhoReactedInPost")
+  commentsReacted  CommentReaction[]  @relation("WhoReactedInComment")
 
   @@index([company_id], name: "company_id_idx")
   @@index([hero_id], name: "user_hero_id_idx")
@@ -260,36 +262,64 @@ model BrandCollection {
   @@index([user_id], name: "collected_folower_id_idx")
 }
 
+model PostReaction {
+  id         String   @id @default(uuid())
+  user_id    String
+  post_id    String
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now()) @updatedAt
+  //
+  user       User     @relation("WhoReactedInPost", fields: [user_id], references: [id])
+  post       Post     @relation(fields: [post_id], references: [id])
+
+  @@index([user_id], name: "post_who_reacted_id_idx")
+  @@index([post_id], name: "post_reacted_post_id_idx")
+}
+
+model CommentReaction {
+  id         String   @id @default(uuid())
+  user_id    String
+  post_id    String
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now()) @updatedAt
+  //
+  user       User     @relation("WhoReactedInComment", fields: [user_id], references: [id])
+  comment    Comment  @relation(fields: [post_id], references: [id])
+
+  @@index([user_id], name: "comment_who_reacted_id_idx")
+  @@index([post_id], name: "comment_reacted_post_id_idx")
+}
+
 model Post {
-  id          String    @id @default(uuid())
-  reactions   Int
-  type        PostPlace @default(PUBLIC)
+  id          String         @id @default(uuid())
+  type        PostPlace      @default(PUBLIC)
   description String
   picture_url String
   author_id   String
   company_id  String?
-  created_at  DateTime  @default(now())
-  updated_at  DateTime  @default(now()) @updatedAt
+  created_at  DateTime       @default(now())
+  updated_at  DateTime       @default(now()) @updatedAt
   //
-  author      User      @relation("PostAuthor", fields: [author_id], references: [id])
-  company     Company?  @relation(fields: [company_id], references: [id])
+  author      User           @relation("PostAuthor", fields: [author_id], references: [id])
+  company     Company?       @relation(fields: [company_id], references: [id])
   comments    Comment[]
+  whoReacted  PostReaction[]
 
   @@index([author_id], name: "post_author_id_idx")
   @@index([company_id], name: "company_posted_id_idx")
 }
 
 model Comment {
-  id          String   @id @default(uuid())
-  reactions   Int
+  id          String            @id @default(uuid())
   description String
   author_id   String
   post_id     String
-  created_at  DateTime @default(now())
-  updated_at  DateTime @default(now()) @updatedAt
+  created_at  DateTime          @default(now())
+  updated_at  DateTime          @default(now()) @updatedAt
   //
-  author      User     @relation("CommentAuthor", fields: [author_id], references: [id])
-  post        Post     @relation(fields: [post_id], references: [id])
+  author      User              @relation("CommentAuthor", fields: [author_id], references: [id])
+  post        Post              @relation(fields: [post_id], references: [id])
+  whoReacted  CommentReaction[]
 
   @@index([author_id], name: "comment_author_id_idx")
   @@index([post_id], name: "post_comment_id_idx")

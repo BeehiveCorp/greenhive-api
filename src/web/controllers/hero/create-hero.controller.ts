@@ -14,7 +14,7 @@ export const createHeroController = (repository: HeroContract) => {
   return async (request: FastifyRequest, reply: FastifyReply) => {
     const { data: hero, fileName } = await uploadFile<Hero>({
       DataClass: Hero,
-      folderName: 'character',
+      folderName: 'hero',
       parts: request.parts(),
     })
 

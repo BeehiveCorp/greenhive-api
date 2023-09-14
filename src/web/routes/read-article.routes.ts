@@ -5,12 +5,12 @@ import { prisma } from '@/infrastructure/db/prisma'
 import {
   PrismaArticleRepository,
   PrismaUserRepository,
+  PrismaReadArticleRepository,
 } from '@/infrastructure/repositories'
 
 import { authMiddleware } from '@/web/middlewares'
 
 import { markArticleAsReadController } from '@/web/controllers/read-article'
-import { PrismaReadArticleRepository } from '@/infrastructure/repositories/prisma.read-article.repository'
 
 export const readArticleRoutes: FastifyPluginCallback = (fastify, _, done) => {
   const articleRepository = new PrismaArticleRepository(prisma)
