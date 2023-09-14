@@ -1,7 +1,10 @@
 import { FastifyPluginCallback } from 'fastify'
 
 import { prisma } from '@/infrastructure/db/prisma'
-import { PrismaPostRepository } from '@/infrastructure/repositories'
+import {
+  PrismaPostRepository,
+  PrismaUserRepository,
+} from '@/infrastructure/repositories'
 
 import { authMiddleware } from '@/web/middlewares'
 
@@ -10,10 +13,12 @@ import {
   listPublicController,
   findByIdController,
   listCorporateController,
+  findByUserIdController,
 } from '@/web/controllers/post'
 
 export const postRoutes: FastifyPluginCallback = (fastify, _, done) => {
   const prismaPostRepository = new PrismaPostRepository(prisma)
+  const prismaUserRepository = new PrismaUserRepository(prisma)
 
   fastify.addHook('preHandler', authMiddleware())
 
@@ -26,6 +31,11 @@ export const postRoutes: FastifyPluginCallback = (fastify, _, done) => {
   fastify.get(
     '/post/corporate/:id/all',
     listCorporateController(prismaPostRepository),
+  )
+
+  fastify.get(
+    '/post/user/:id/all',
+    findByUserIdController(prismaPostRepository, prismaUserRepository),
   )
 
   done()

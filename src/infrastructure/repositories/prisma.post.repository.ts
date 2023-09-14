@@ -11,6 +11,20 @@ export class PrismaPostRepository implements PostContract {
     this._prisma = prisma
   }
 
+  async findByUserId(id: string): Promise<Post[]> {
+    const posts = await this._prisma.post.findMany({
+      include: { author: true, comments: true, reactions: true },
+      where: { author_id: id },
+    })
+
+    const flattenedResults = _.map(posts, (post) => ({
+      ...post,
+      reactions: _.map(post.reactions, 'user_id'),
+    }))
+
+    return flattenedResults
+  }
+
   async create(post: Post): Promise<Post> {
     const created = await this._prisma.post.create({
       data: post,
