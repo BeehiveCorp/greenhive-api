@@ -24,7 +24,7 @@ export class ListFollowingUseCase implements IListFollowingUseCase {
 
     if (!following) throw new NotFoundError('Usuário não encontrado.')
 
-    const heroes = await this.networkRepository.getAllFollowers(following)
-    return heroes
+    const found = await this.networkRepository.getAllFollowing(following)
+    return found
   }
 }

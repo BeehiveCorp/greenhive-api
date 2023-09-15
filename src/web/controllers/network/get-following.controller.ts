@@ -4,7 +4,7 @@ import { FastifyReply, FastifyRequest } from 'fastify'
 
 import { NetworkContract, UserContract } from '@/application/contracts'
 
-import { ListFollowersUseCase } from '@/application/usecases/network'
+import { ListFollowingUseCase } from '@/application/usecases/network'
 import { ResponseHandler } from '@/web/utils'
 import { BaseError } from '@/application/errors'
 
@@ -16,14 +16,14 @@ export const getFollowingController = (
     try {
       const { id } = request.params as { id: string }
 
-      const useCase = new ListFollowersUseCase(
+      const useCase = new ListFollowingUseCase(
         networkRepository,
         userRepository,
       )
 
-      const followers = await useCase.execute(id)
+      const following = await useCase.execute(id)
 
-      return reply.send(followers)
+      return reply.send(following)
     } catch (error) {
       ResponseHandler.error(reply, error as BaseError)
     }

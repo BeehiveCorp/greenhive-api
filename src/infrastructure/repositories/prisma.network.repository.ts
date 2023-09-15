@@ -40,10 +40,11 @@ export class PrismaNetworkRepository implements NetworkContract {
 
   async getAllFollowers(following: User): Promise<User[]> {
     const found = await this._prisma.network.findMany({
-      where: { id: following.id },
+      where: { following_id: following.id },
       include: {
         follower_user: {
           select: {
+            id: true,
             avatar_url: true,
             username: true,
             name: true,
@@ -57,10 +58,11 @@ export class PrismaNetworkRepository implements NetworkContract {
 
   async getAllFollowing(follower: User): Promise<User[]> {
     const found = await this._prisma.network.findMany({
-      where: { id: follower.id },
+      where: { follower_id: follower.id },
       include: {
         following_user: {
           select: {
+            id: true,
             avatar_url: true,
             username: true,
             name: true,

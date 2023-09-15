@@ -23,6 +23,8 @@ export const getFollowersController = (
 
       const followers = await useCase.execute(id)
 
+      console.log(followers)
+
       return reply.send(followers)
     } catch (error) {
       ResponseHandler.error(reply, error as BaseError)

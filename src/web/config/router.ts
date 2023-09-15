@@ -11,6 +11,7 @@ import {
   postReactionRoutes,
   commentRoutes,
   commentReactionRoutes,
+  networkRoutes,
 } from '@/web/routes'
 
 export const router: FastifyPluginCallback = (fastify, _, done) => {
@@ -24,6 +25,7 @@ export const router: FastifyPluginCallback = (fastify, _, done) => {
   fastify.register(postReactionRoutes)
   fastify.register(commentRoutes)
   fastify.register(commentReactionRoutes)
+  fastify.register(networkRoutes)
 
   done()
 }
